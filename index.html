@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DayForge</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1030;--card:#141a45;--card2:#1c2356;--tx:#eef0ff;--mut:#9aa3d6;--v:#7c5cff;--o:#ff9a4d;--ok:#34d399;--bad:#f87171;--ln:#2a3274;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f5ff;--card:#fff;--card2:#eceeff;--tx:#12163a;--mut:#5a6099;--ln:#d5d9f5}}
+:root[data-theme="light"]{--bg:#f4f5ff;--card:#fff;--card2:#eceeff;--tx:#12163a;--mut:#5a6099;--ln:#d5d9f5}
+:root[data-theme="dark"]{--bg:#0b1030;--card:#141a45;--card2:#1c2356;--tx:#eef0ff;--mut:#9aa3d6;--ln:#2a3274}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+h1,h2,h3,.brand{font-family:Sora,system-ui,sans-serif;margin:0;letter-spacing:-.02em}
+#app{max-width:480px;margin:0 auto;min-height:100vh;padding:16px 16px 88px}
+.card{background:var(--card);border-radius:18px;padding:16px;margin-bottom:12px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font:600 16px system-ui;cursor:pointer;background:var(--v);color:#fff;margin-top:10px}
+.btn.alt{background:transparent;border:1.5px solid var(--ln);color:var(--tx)}.btn.o{background:var(--o);color:#1a1030}.btn.sm{width:auto;display:inline-block;padding:8px 14px;font-size:14px;margin:0}
+.btn.red{background:transparent;color:var(--bad);border:1.5px solid var(--bad)}
+label{display:block;font-size:14px;color:var(--mut);margin:12px 0 4px}
+input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--ln);background:var(--card2);color:var(--tx);font:16px system-ui}
+input[type=checkbox]{width:auto;margin-right:8px}.chk{display:flex;align-items:center;margin-top:12px;font-size:15px}
+:focus-visible{outline:2px solid var(--o);outline-offset:2px}
+.err{color:var(--bad);font-size:14px;margin-top:4px}.mut{color:var(--mut);font-size:14px}
+.hero{text-align:center;padding-top:28px}.hero h1{font-size:34px;margin:14px 0 6px}.tag{color:var(--o);font-weight:700;font-family:Sora}
+.links{text-align:center;margin-top:18px;font-size:13px}.links a{color:var(--mut);margin:0 8px}
+.prog{height:6px;background:var(--card2);border-radius:9px;overflow:hidden;margin:8px 0 14px}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--v),var(--o))}
+.plan{border:2px solid var(--ln)}.plan.best{border-color:var(--v)}.price{font:800 28px Sora}.badge{background:var(--o);color:#1a1030;font-size:12px;font-weight:700;border-radius:8px;padding:2px 8px;margin-left:6px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--ln);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav div{display:flex;width:100%;max-width:480px}nav button{flex:1;background:none;border:0;color:var(--mut);padding:12px 4px;font:600 13px system-ui;cursor:pointer}nav button.on{color:var(--o)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--card2);border-radius:14px;padding:12px}.stat b{font:800 24px Sora;display:block}
+.bars{display:flex;gap:8px;align-items:flex-end;height:90px}.bars div{flex:1;text-align:center;font-size:12px;color:var(--mut)}.bars span{display:block;background:var(--card2);border-radius:6px;position:relative;margin-bottom:4px;overflow:hidden}.bars span i{position:absolute;bottom:0;left:0;right:0;background:var(--v)}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}.days button{flex:0 0 auto;min-width:48px;border:0;border-radius:12px;padding:8px;background:var(--card);color:var(--tx);font:600 13px system-ui;cursor:pointer}.days button.on{background:var(--v);color:#fff}
+.grid{position:relative;margin-left:44px;border-left:1px solid var(--ln)}.hr{height:48px;border-top:1px solid var(--ln);position:relative}.hr span{position:absolute;left:-44px;top:-9px;font-size:12px;color:var(--mut);width:38px;text-align:right}
+.blk{position:absolute;left:6px;right:6px;border-radius:10px;padding:4px 8px;font-size:13px;color:#fff;overflow:hidden;cursor:pointer;border-left:5px solid rgba(0,0,0,.25)}
+.blk.done{opacity:.5}.blk.missed{background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(0,0,0,.25) 6px 12px)}.blk.now{box-shadow:0 0 0 2px var(--o)}
+.now-line{position:absolute;left:-6px;right:0;height:2px;background:var(--o);z-index:3}.now-line:before{content:"";position:absolute;left:0;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--o)}
+.fab{position:fixed;right:max(16px,calc(50% - 224px));bottom:calc(76px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;border:0;background:var(--o);color:#1a1030;font-size:30px;cursor:pointer;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.modal{position:fixed;inset:0;background:rgba(5,8,30,.7);z-index:10;display:flex;align-items:flex-end;justify-content:center}.sheet{background:var(--card);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+.row{display:flex;gap:10px}.row>*{flex:1}.item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--ln)}.dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+.remb{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:12px;right:12px;max-width:456px;margin:0 auto;background:var(--card2);border:2px solid var(--o);border-radius:16px;padding:12px 14px;z-index:30;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--v);color:#fff;padding:10px 16px;border-radius:12px;z-index:20;font-size:14px}
+</style></head><body><div id="app"></div>
+<script>
+const CATS={Study:'#7c5cff',Work:'#3b82f6',Exercise:'#16a34a',Sleep:'#475599',Meals:'#e8802c',"Personal care":'#db2777',Family:'#e11d48',Travel:'#0891b2',Entertainment:'#ca8a04',Other:'#64748b'};
+const GOALS=['Stop procrastinating','Study more consistently','Improve work productivity','Build a daily routine','Improve time management','Balance work and personal life'];
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
+const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const mm=t=>{if(t==='00:00')return 0;const[a,b]=t.split(':');return +a*60+ +b},tm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60),hm=m=>(m/60).toFixed(1).replace('.0','')+'h';
+const def=()=>({screen:'welcome',p:{},plan:null,acts:[],theme:'dark',tab:'home',day:key(new Date()),owner:'',rz:'',coupons:[],buys:[],cp:null,rem:true,lead:10,lb:true});
+let S;try{S=JSON.parse(localStorage.getItem('df'))||def()}catch(e){S=def()}S=Object.assign(def(),S);
+let errs={},modal=null;
+const save=()=>{try{localStorage.setItem('df',JSON.stringify(S))}catch(e){}};
+const logo=z=>`<svg width="${z}" height="${z}" viewBox="0 0 64 64" role="img" aria-label="DayForge logo"><rect width="64" height="64" rx="16" fill="#12163a"/><circle cx="32" cy="35" r="19" fill="none" stroke="#7c5cff" stroke-width="5"/><path d="M32 38V22M32 22l-7 8M32 22l7 8" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="13" r="5" fill="#ff9a4d"/></svg>`;
+const toast=m=>{const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)};
+const dow=d=>new Date(d+'T00:00').getDay();
+function occ(d){return S.acts.filter(a=>a.date===d||(a.repeat!=='none'&&a.date<d&&(a.repeat==='daily'||(a.repeat==='weekdays'&&dow(d)>0&&dow(d)<6)||(a.repeat==='weekly'&&dow(a.date)===dow(d))))).sort((a,b)=>a.start-b.start)}
+function status(a,d){if(a.dn&&a.dn[d])return'done';const t=key(new Date()),n=new Date().getHours()*60+new Date().getMinutes();if(d<t)return'missed';if(d>t)return'upcoming';return a.end<=n?'missed':a.start<=n?'now':'upcoming'}
+function trial(){const p=S.plan;if(!p)return{ok:false};if(p.type==='trial'){const left=p.expiry-Date.now();return{ok:left>0,label:left>0?'Free trial ends '+new Date(p.expiry).toLocaleString([], {dateStyle:'medium',timeStyle:'short'}):'Trial expired'}}return{ok:true,label:(p.type==='monthly'?'Monthly':'Yearly')+' plan (demo)'}}
+function go(s){S.screen=s;save();render()}
+function render(){document.documentElement.dataset.theme=S.theme;const A=$('#app');
+if(S.screen==='app'&&!trial().ok)S.screen='plans';
+const f={welcome,details,plans,app}[S.screen];A.innerHTML=f();if(S.screen==='app'&&modal)A.insertAdjacentHTML('beforeend',sheet())}
+function welcome(){return`<div class="hero">${logo(84)}<h1 class="brand">DayForge</h1><div class="tag">Build Your Day. Become Your Best.</div>
+<p class="mut" style="margin:16px 8px">Plan every hour, finish what you start, and build a routine that lasts. DayForge turns your 24 hours into a schedule you can follow.</p></div>
+<div class="card"><div class="mut">Today’s plan</div>${[['06:30','Run','#16a34a',1],['09:00','Deep study','#7c5cff',1],['13:00','Lunch','#e8802c',0],['15:00','Project work','#3b82f6',0]].map(x=>`<div class="item"><span class="dot" style="background:${x[2]}"></span><b style="width:52px">${x[0]}</b><span>${x[1]}</span><span style="margin-left:auto">${x[3]?'✓':''}</span></div>`).join('')}<div class="prog"><i style="width:50%"></i></div></div>
+<button class="btn" data-a="start">Get Started</button><button class="btn alt" data-a="login">I Already Have an Account</button>
+<p class="links"><a href="#" data-a="legal">Privacy Policy</a><a href="#" data-a="legal">Terms of Service</a><a href="#" data-a="owner">Owner setup</a></p>${oe?`<div class="card"><label for="oe">Owner Gmail (unlocks Admin)</label><input id="oe" type="email" value="${esc(S.owner)}" placeholder="you@gmail.com"><button class="btn sm" style="margin-top:10px" data-a="saveowner">Save owner email</button><p class="mut">Prototype only. The real app reads this from a server setting and checks it with Google sign-in.</p></div>`:''}`}
+function details(){const p=S.p,e=errs,tz=p.tz||Intl.DateTimeFormat().resolvedOptions().timeZone;
+const fld=(k,l,t,v)=>`<label for="${k}">${l}</label><input id="${k}" type="${t}" value="${v||''}">${e[k]?`<div class="err">${e[k]}</div>`:''}`;
+return`<button class="btn alt sm" data-a="back">← Back</button><div class="prog"><i style="width:33%"></i></div><h2>Tell us about you</h2><p class="mut">Step 1 of 3. We only keep what the app needs.</p>
+${fld('name','Full name','text',p.name)}${fld('age','Age','number',p.age)}${fld('email','Email address','email',p.email)}${fld('country','Country','text',p.country||'India')}${fld('tz','Time zone','text',tz)}
+<label for="goal">Main productivity goal</label><select id="goal">${GOALS.map(g=>`<option ${p.goal===g?'selected':''}>${g}</option>`).join('')}</select>
+<div class="row"><div>${fld('wake','Wake time','time',p.wake||'06:30')}</div><div>${fld('sleep','Sleep time','time',p.sleep||'22:30')}</div></div>
+<p class="mut">Prototype note: email verification is simulated here. The real app will send a verification link through Supabase Auth.</p><button class="btn" data-a="cont">Continue</button>`}
+function plans(){const t=S.plan&&S.plan.type==='trial'&&!trial().ok,used=S.plan&&S.plan.trialUsed;
+return`${trial().ok?'<button class="btn alt sm" data-a="home">← Back</button>':''}<div class="prog"><i style="width:${t?100:66}%"></i></div><h2>${t?'Your trial has ended':'Choose your plan'}</h2><p class="mut">${t?'Your timetable is safe. Subscribe to unlock it again.':'Step 2 of 3. Cancel any time. Nothing renews without your consent.'}</p>
+${used?'':`<div class="card plan"><h3>7-day free trial</h3><p class="mut">Full access for exactly seven days. One per account. No payment details. It never turns into a paid plan on its own.</p><button class="btn o" data-a="trial">Start My 7-Day Free Trial</button></div>`}
+<div class="card"><label for="cpn" style="margin-top:0">Coupon code</label><div class="row"><input id="cpn" style="flex:2" value="${S.cp||''}" placeholder="Enter code"><button class="btn sm" data-a="applycp">Apply</button></div>${cpmsg?`<div class="mut" style="margin-top:6px">${esc(cpmsg)}</div>`:''}</div><div class="card plan"><h3>Monthly</h3><div class="price">${pr('monthly')}<span class="mut" style="font-size:15px"> / month</span></div><p class="mut">Billed every month until you cancel.</p><button class="btn" data-a="pay" data-p="monthly">Choose Monthly</button></div>
+<div class="card plan best"><h3>Yearly<span class="badge">Save 62%</span></h3><div class="price">${pr('yearly')}<span class="mut" style="font-size:15px"> / year</span></div><p class="mut">About ₹75 a month. Billed once a year until you cancel.</p><button class="btn" data-a="pay" data-p="yearly">Choose Yearly</button></div>
+<p class="mut">Prototype note: payments are simulated. Real Razorpay checkout and the server-enforced trial come in the backend stage.</p>${S.plan&&S.plan.type!=='trial'||!t?'':''}`}
+function app(){if(S.tab==='admin'&&!isAdmin())S.tab='home';const b={home,time,rank:rankView,settings,admin:adminView}[S.tab]();return b+`<nav><div>${[['home','Home'],['time','Timetable'],['rank','Rank'],['set','Settings'],...(isAdmin()?[['admin','Admin']]:[])].map(([k,l])=>`<button data-a="tab" data-t="${k==='set'?'settings':k}" class="${S.tab===(k==='set'?'settings':k)?'on':''}">${l}</button>`).join('')}</div></nav>`+((S.tab==='home'||S.tab==='time')?`<button class="fab" data-a="add" aria-label="Add activity">+</button>`:'')}
+function home(){const d=key(new Date()),L=occ(d),pl=L.reduce((s,a)=>s+a.end-a.start,0),dn=L.filter(a=>a.dn&&a.dn[d]),dm=dn.reduce((s,a)=>s+(a.actual||a.end-a.start),0),h=new Date().getHours(),n=h*60+new Date().getMinutes();
+const nx=L.filter(a=>!(a.dn&&a.dn[d])&&a.end>n).slice(0,3),pc=L.length?Math.round(dn.length/L.length*100):0;
+const wk=[...Array(7)].map((_,i)=>{const x=new Date();x.setDate(x.getDate()-6+i);const k=key(x),l=occ(k);return{n:'SMTWTFS'[x.getDay()],p:l.length,c:l.filter(a=>a.dn&&a.dn[k]).length}}),mx=Math.max(1,...wk.map(w=>w.p));
+return`<div style="display:flex;align-items:center;gap:10px">${logo(40)}<div><h2>Good ${h<12?'morning':h<18?'afternoon':'evening'}, ${(S.p.name||'there').split(' ')[0]}</h2><div class="mut">${new Date().toLocaleDateString([], {weekday:'long',day:'numeric',month:'long'})}</div></div></div>
+<div class="card" style="margin-top:14px"><div class="stats"><div class="stat"><b>${hm(pl)}</b>planned today</div><div class="stat"><b>${hm(dm)}</b>completed</div></div><div class="prog" style="margin-top:12px"><i style="width:${pc}%"></i></div><div class="mut">${dn.length} of ${L.length} activities done (${pc}%)</div></div>
+<div class="card"><h3>Up next</h3>${nx.length?nx.map(a=>`<div class="item" data-a="edit" data-id="${a.id}"><span class="dot" style="background:${CATS[a.cat]||'#64748b'}"></span><b style="width:52px">${tm(a.start)}</b><span>${esc(a.title)}</span></div>`).join(''):L.length?`<p class="mut">Nothing left today. Nice work.</p>`:`<p class="mut">Your day is empty. Add your first activity to start building your routine.</p><button class="btn sm" data-a="add">Add first activity</button>`}</div>
+<div class="card"><h3>This week</h3><div class="bars" style="margin-top:10px">${wk.map(w=>`<div><span style="height:${Math.max(6,w.p/mx*64)}px"><i style="height:${w.p?w.c/w.p*100:0}%"></i></span>${w.n}</div>`).join('')}</div><p class="mut">Purple shows completed activities out of those planned each day.</p></div>
+<div class="card" data-a="gorank"><div class="mut">Your rank</div><b>${rk().cur.n}</b>, ${pts().tot} points</div><div class="card"><div class="mut">Plan</div><b>${trial().label}</b></div>`}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let at='over',cpmsg='',oe=false;
+const isAdmin=()=>!!(S.owner&&S.p.email&&S.p.email.toLowerCase()===S.owner.toLowerCase());
+const BASE={monthly:199,yearly:899},inr=n=>'₹'+n.toLocaleString('en-IN');
+function cpCheck(code,plan){const c=S.coupons.find(x=>x.code===code);if(!c)return'Code not found.';if(!c.on)return'This coupon is disabled.';if(c.exp&&c.exp<key(new Date()))return'This coupon has expired.';if(c.max&&c.used>=c.max)return'This coupon has been fully used.';if(plan&&c.plan!=='both'&&c.plan!==plan)return'This coupon only applies to the '+c.plan+' plan.';return c}
+function calc(plan){const base=BASE[plan],c=S.cp?cpCheck(S.cp,plan):null;if(!c||typeof c==='string')return{base,disc:0,fin:base,c:null};const d=c.type==='pct'?Math.round(base*c.value/100):Math.round(c.value);const fin=Math.max(1,base-d);return{base,disc:base-fin,fin,c}}
+const pr=p=>{const r=calc(p);return r.disc?`<s class="mut" style="font-size:16px">₹${r.base}</s> ₹${r.fin}`:'₹'+r.base};
+const RANKS=[['Bronze',0],['Silver',100],['Gold',300],['Platinum',700],['Diamond',1500]],SAMPLE=[['Aarav',420],['Meera',360],['Kabir',280],['Isha',210],['Rohan',150],['Zoya',90]],fired={};
+function pts(){let tot=0,wk=0;const lim=key(new Date(Date.now()-6*864e5));S.acts.forEach(a=>Object.keys(a.dn||{}).forEach(d=>{const p=10+Math.floor((a.end-a.start)/30)*5;tot+=p;if(d>=lim)wk+=p}));return{tot,wk}}
+function rk(){const t=pts().tot;let i=0;RANKS.forEach((r,j)=>{if(t>=r[1])i=j});return{cur:{n:RANKS[i][0],at:RANKS[i][1]},next:RANKS[i+1]?{n:RANKS[i+1][0],at:RANKS[i+1][1]}:null}}
+function rankView(){const p=pts(),r=rk(),me=(S.p.name||'You').split(' ')[0],rows=[...SAMPLE.map(x=>({n:x[0],w:x[1],s:1})),...(S.lb?[{n:me,w:p.wk,me:1}]:[])].sort((a,b)=>b.w-a.w);
+return`<h2>Rank</h2><div class="card" style="margin-top:12px"><div class="stats"><div class="stat"><b>${r.cur.n}</b>your rank</div><div class="stat"><b>${p.tot}</b>total points</div></div>${r.next?`<div class="prog" style="margin-top:12px"><i style="width:${Math.min(100,(p.tot-r.cur.at)/(r.next.at-r.cur.at)*100)}%"></i></div><div class="mut">${r.next.at-p.tot} points to ${r.next.n}</div>`:'<div class="mut" style="margin-top:10px">Top rank reached.</div>'}<p class="mut">Earn 10 points for each completed activity, plus 5 for every 30 minutes it was planned to last.</p></div><div class="card"><h3>Weekly leaderboard</h3><div class="mut">Points from the last 7 days. Other players are sample data until the cloud database is live.</div>${rows.map((x,i)=>`<div class="item"><b style="width:28px">${i+1}</b><span>${esc(x.n)}${x.s?'<span class="badge" style="background:var(--card2);color:var(--mut)">Sample</span>':''}${x.me?' (you)':''}</span><b style="margin-left:auto">${x.w}</b></div>`).join('')}<label class="chk"><input id="lb" type="checkbox" ${S.lb?'checked':''}>Show me on the leaderboard</label></div>`}
+function notify(a,m){const b=document.createElement('div');b.className='remb';b.innerHTML=`<b>Reminder</b><div>${esc(m)}</div><div class="row" style="margin-top:8px"><button class="btn sm" data-a="remgo" data-id="${a.id}">Open</button><button class="btn alt sm" data-a="remx">Dismiss</button></div>`;document.body.appendChild(b);try{if('Notification' in window&&Notification.permission==='granted')new Notification('DayForge',{body:m})}catch(e){}}
+function tick(){if(S.screen!=='app'||!S.rem)return;const d=key(new Date()),n=new Date().getHours()*60+new Date().getMinutes();occ(d).forEach(a=>{if(!a.rem||(a.dn&&a.dn[d]))return;const k1=a.id+d+'p',k2=a.id+d+'s';if(n>=a.start-S.lead&&n<a.start&&!fired[k1]){fired[k1]=1;notify(a,'Starts in '+(a.start-n)+' min: '+a.title+'. Get ready to work.')}if(n>=a.start&&n<a.start+5&&!fired[k2]){fired[k2]=1;notify(a,'Time to start: '+a.title+'. Begin now.')}})}
+function adminView(){const B=S.buys,rev=B.reduce((s,b)=>s+b.fin,0),ds=B.reduce((s,b)=>s+b.disc,0),red=B.filter(b=>b.code).length;
+let h=`<h2>Admin</h2><div class="mut">Owner: ${esc(S.owner)}</div><div class="days" style="margin:10px 0">${[['over','Overview'],['buys','Purchases'],['cpn','Coupons'],['rz','Razorpay']].map(([k,l])=>`<button data-a="at" data-t="${k}" class="${at===k?'on':''}">${l}</button>`).join('')}</div>`;
+if(at==='over')h+=`<div class="stats"><div class="stat"><b>${inr(rev)}</b>revenue (demo)</div><div class="stat"><b>${B.length}</b>purchases</div><div class="stat"><b>${red}</b>coupon redemptions</div><div class="stat"><b>${inr(ds)}</b>discounts given</div></div><div class="card" style="margin-top:12px"><h3>Accounts</h3><p class="mut">The prototype shows only this device’s account. The real app lists every user from the database.</p><div class="item"><b>${esc(S.p.name||'')}</b><span class="mut">${esc(S.p.email||'')}</span></div><div class="mut">Plan: ${trial().label||'none'}</div></div>${B.length?'':'<p class="mut">No purchases yet. Open Settings, then View plans, to record a demo purchase.</p>'}`;
+if(at==='buys')h+=B.length?B.slice().reverse().map(b=>`<div class="card"><b>${inr(b.fin)}</b> for ${b.plan}<div class="mut">${new Date(b.t).toLocaleString()}, ${esc(b.email||'')}</div><div class="mut">${b.code?'Coupon '+esc(b.code)+' (−'+inr(b.disc)+')':'No coupon'}. ${b.status}</div></div>`).join(''):'<div class="card mut">No purchases recorded yet.</div>';
+if(at==='cpn')h+=`<div class="card"><h3>New coupon</h3><label for="c-code">Code</label><input id="c-code" placeholder="SPONSOR25"><label for="c-note">Sponsor or description</label><input id="c-note"><div class="row"><div><label for="c-type">Type</label><select id="c-type"><option value="pct">Percent</option><option value="fix">Fixed ₹</option></select></div><div><label for="c-val">Value</label><input id="c-val" type="number" min="1"></div></div><div class="row"><div><label for="c-plan">Plan</label><select id="c-plan"><option value="both">Both</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div><div><label for="c-max">Max uses (0 = no limit)</label><input id="c-max" type="number" min="0" value="0"></div></div><label for="c-exp">Expiry date (optional)</label><input id="c-exp" type="date">${errs.cpn?`<div class="err">${errs.cpn}</div>`:''}<button class="btn" data-a="mkcpn">Create coupon</button></div>`+S.coupons.map(c=>{const dd=B.filter(b=>b.code===c.code).reduce((s,b)=>s+b.disc,0);return`<div class="card"><b>${esc(c.code)}</b> ${c.type==='pct'?c.value+'%':inr(c.value)} off, ${c.plan}<div class="mut">${esc(c.note||'')}</div><div class="mut">Used ${c.used}${c.max?' of '+c.max:''}. Discounts ${inr(dd)}. ${c.on?'Enabled':'Disabled'}${c.exp?'. Expires '+c.exp:''}</div><div class="row" style="margin-top:8px"><button class="btn alt sm" data-a="tgl" data-id="${esc(c.code)}">${c.on?'Disable':'Enable'}</button><button class="btn red sm" data-a="delcpn" data-id="${esc(c.code)}">Delete</button></div></div>`}).join('');
+if(at==='rz')h+=`<div class="card"><h3>Razorpay</h3><label for="rzk">Key ID (public)</label><input id="rzk" value="${esc(S.rz)}" placeholder="rzp_test_xxxxxxxx">${errs.rz?`<div class="err">${errs.rz}</div>`:''}<button class="btn sm" style="margin-top:10px" data-a="saverz">Save Key ID</button><p class="mut">Mode: ${S.rz.startsWith('rzp_live_')?'Live':S.rz.startsWith('rzp_test_')?'Test':'Not set'}</p></div><div class="card"><h3>Keep secrets off the app</h3><p class="mut">Never type your Key Secret or Webhook Secret into this app. They go on the server as RAZORPAY_KEY_SECRET and RAZORPAY_WEBHOOK_SECRET. Customer payments settle to the bank account linked in your Razorpay dashboard. Checkout here is simulated until the backend stage.</p></div>`;
+return h}
+function time(){const sel=new Date(S.day+'T00:00'),L=occ(S.day),t=key(new Date()),now=new Date(),nm=now.getHours()*60+now.getMinutes();
+const ds=[...Array(7)].map((_,i)=>{const x=new Date();x.setDate(x.getDate()-x.getDay()+i);return x});
+return`<h2>Timetable</h2><div class="days" style="margin:10px 0">${ds.map(x=>`<button data-a="day" data-d="${key(x)}" class="${key(x)===S.day?'on':''}">${'Sun Mon Tue Wed Thu Fri Sat'.split(' ')[x.getDay()]}<br>${x.getDate()}</button>`).join('')}</div>
+<div class="mut" style="margin-bottom:8px">${sel.toLocaleDateString([], {weekday:'long',day:'numeric',month:'long'})}${L.length?'':' · No activities yet. Tap + to plan this day.'}</div>
+<div class="grid">${[...Array(24)].map((_,h)=>`<div class="hr"><span>${pad(h)}:00</span></div>`).join('')}
+${L.map(a=>{const s=status(a,S.day);return`<div class="blk ${s}" data-a="edit" data-id="${a.id}" style="top:${a.start*.8}px;height:${Math.max(22,(a.end-a.start)*.8-2)}px;background:${CATS[a.cat]||'#64748b'}"><b>${s==='done'?'✓ ':''}${esc(a.title)}</b> <span style="opacity:.85">${tm(a.start)}–${a.end===1440?'24:00':tm(a.end)}</span></div>`}).join('')}
+${S.day===t?`<div class="now-line" style="top:${nm*.8}px"></div>`:''}</div>`}
+function settings(){const p=S.p;return`<h2>Settings</h2>
+<div class="card"><label for="sname">Name</label><input id="sname" value="${esc(p.name||'')}"><label>Email (verified in the real app)</label><input value="${esc(p.email||'')}" disabled><label for="sgoal">Main goal</label><select id="sgoal">${GOALS.map(g=>`<option ${p.goal===g?'selected':''}>${g}</option>`).join('')}</select><button class="btn sm" style="margin-top:12px" data-a="savep">Save profile</button></div>
+<div class="card"><div class="mut">Subscription</div><b>${trial().label}</b><button class="btn alt" data-a="plans">View plans</button></div>
+<div class="card"><h3>Reminders</h3><label class="chk"><input id="remtog" type="checkbox" ${S.rem?'checked':''}>Remind me to start activities</label><label for="lead">Remind me before start</label><select id="lead">${[5,10,15,30].map(m=>`<option value="${m}" ${S.lead===m?'selected':''}>${m} minutes</option>`).join('')}</select><div class="row" style="margin-top:12px"><button class="btn sm" data-a="perm">Allow notifications</button><button class="btn alt sm" data-a="testrem">Send test</button></div><p class="mut">In the prototype, reminders appear only while this page is open. The Android app will send them in the background.</p></div>
+<div class="card"><label for="theme">Theme</label><select id="theme"><option value="dark" ${S.theme==='dark'?'selected':''}>Dark</option><option value="light" ${S.theme==='light'?'selected':''}>Light</option></select></div>
+<button class="btn alt" data-a="out">Sign out</button><button class="btn red" data-a="wipe">Delete all local data</button>`}
+function sheet(){const a=modal,ed=!!a.id;return`<div class="modal" data-a="close"><div class="sheet" data-stop><h3>${ed?'Edit activity':'New activity'}</h3>
+<label for="f-title">Title</label><input id="f-title" value="${esc(a.title)}">${errs.title?`<div class="err">${errs.title}</div>`:''}
+<div class="row"><div><label for="f-cat">Category</label><select id="f-cat">${Object.keys(CATS).map(c=>`<option ${a.cat===c?'selected':''}>${c}</option>`).join('')}</select></div><div><label for="f-date">Date</label><input id="f-date" type="date" value="${a.date}"></div></div>
+<div class="row"><div><label for="f-s">Start</label><input id="f-s" type="time" value="${tm(a.start)}"></div><div><label for="f-e">End</label><input id="f-e" type="time" value="${tm(a.end)}"></div></div>${errs.time?`<div class="err">${errs.time}</div>`:''}
+<label for="f-r">Repeat</label><select id="f-r">${[['none','Does not repeat'],['daily','Every day'],['weekdays','Weekdays'],['weekly','Every week']].map(([v,l])=>`<option value="${v}" ${a.repeat===v?'selected':''}>${l}</option>`).join('')}</select>
+<label for="f-n">Notes</label><textarea id="f-n" rows="2">${esc(a.notes||'')}</textarea>
+<label class="chk"><input id="f-rem" type="checkbox" ${a.rem?'checked':''}>Remind me to start</label>
+${ed?`<label class="chk"><input id="f-dn" type="checkbox" ${a.dn&&a.dn[S.day]?'checked':''}>Mark complete</label><label for="f-act">Actual minutes spent</label><input id="f-act" type="number" min="0" value="${a.actual||''}" placeholder="${a.end-a.start}">`:''}
+${errs.over?`<div class="err">${errs.over}</div><label class="chk"><input id="f-ov" type="checkbox">Allow overlap</label>`:''}
+<button class="btn" data-a="saveact">Save activity</button>${ed?`<div class="row"><button class="btn alt" data-a="dup">Duplicate</button><button class="btn red" data-a="del">Delete</button></div>`:''}<button class="btn alt" data-a="close">Cancel</button></div></div>`}
+function openForm(a){errs={};modal=a||{title:'',cat:'Study',date:S.day,start:540,end:600,repeat:'none',notes:'',rem:true};render()}
+function saveAct(){const g=i=>document.getElementById(i),a=modal;errs={};
+const title=g('f-title').value.trim(),s=mm(g('f-s').value),e=mm(g('f-e').value),date=g('f-date').value;
+if(!title)errs.title='Enter a title.';if(!date||e<=s)errs.time='End time must be after start time.';
+if(!Object.keys(errs).length){const rp=g('f-r').value,tmp={...a,date,repeat:rp,start:s,end:e};
+const hit=occ(date).filter(x=>x.id!==a.id&&x.start<e&&x.end>s);
+if(hit.length&&!(g('f-ov')&&g('f-ov').checked))errs.over='This overlaps “'+hit[0].title+'”. Tick Allow overlap to keep both.'}
+Object.assign(a,{title,cat:g('f-cat').value,date,start:s,end:e,repeat:g('f-r').value,notes:g('f-n').value,rem:g('f-rem').checked});
+if(Object.keys(errs).length){render();return}
+a.dn=a.dn||{};if(a.id){const c=g('f-dn');if(c){c.checked?a.dn[S.day]=1:delete a.dn[S.day]}const x=g('f-act');if(x)a.actual=+x.value||0}
+else{a.id=Date.now()+''+Math.floor(Math.random()*99);S.acts.push(a)}
+const i=S.acts.findIndex(x=>x.id===a.id);if(i>=0)S.acts[i]=a;modal=null;save();render();toast('Activity saved')}
+document.addEventListener('click',ev=>{const t=ev.target.closest('[data-a]');if(!t)return;if(t.classList.contains('modal')&&ev.target.closest('[data-stop]'))return;const a=t.dataset.a,P=S.p;
+if(a==='start'||a==='login'){go('details');return}
+if(a==='legal'){ev.preventDefault();toast('Legal pages will be added in the backend stage');return}
+if(a==='back'){go('welcome');return}
+if(a==='cont'){const v=i=>document.getElementById(i).value.trim();Object.assign(P,{name:v('name'),age:v('age'),email:v('email'),country:v('country'),tz:v('tz'),goal:document.getElementById('goal').value,wake:v('wake'),sleep:v('sleep')});errs={};
+if(P.name.length<2)errs.name='Enter your full name.';if(!(+P.age>=13&&+P.age<=110))errs.age='You must be at least 13. Enter a valid age.';if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(P.email))errs.email='Enter a valid email address.';if(!P.country)errs.country='Enter your country.';if(!P.tz)errs.tz='Enter your time zone.';
+if(Object.keys(errs).length){save();render();return}save();go('plans');return}
+if(a==='trial'){S.plan={type:'trial',start:Date.now(),expiry:Date.now()+7*864e5,trialUsed:1};S.tab='home';go('app');toast('Trial started');return}
+if(a==='pay'){const p=t.dataset.p,r=calc(p);S.buys.push({t:Date.now(),email:P.email,plan:p,base:r.base,disc:r.disc,fin:r.fin,code:r.c?r.c.code:'',status:'Paid (demo)'});if(r.c)r.c.used++;S.cp=null;cpmsg='';S.plan={type:p,start:Date.now(),trialUsed:1};S.tab='home';go('app');toast('Demo payment recorded: ₹'+r.fin);return}
+if(a==='tab'){S.tab=t.dataset.t;save();render();return}
+if(a==='day'){S.day=t.dataset.d;save();render();return}
+if(a==='add'){openForm();return}
+if(a==='edit'){openForm(JSON.parse(JSON.stringify(S.acts.find(x=>x.id===t.dataset.id))));return}
+if(a==='close'){modal=null;render();return}
+if(a==='saveact'){saveAct();return}
+if(a==='dup'){const c={...modal,id:Date.now()+'d',title:modal.title+' (copy)',dn:{}};S.acts.push(c);modal=null;save();render();toast('Duplicated');return}
+if(a==='del'){S.acts=S.acts.filter(x=>x.id!==modal.id);modal=null;save();render();toast('Activity deleted');return}
+if(a==='savep'){P.name=document.getElementById('sname').value.trim()||P.name;P.goal=document.getElementById('sgoal').value;save();toast('Profile saved');render();return}
+if(a==='plans'){go('plans');return}
+if(a==='home'){go('app');return}
+if(a==='remx'){t.closest('.remb').remove();return}
+if(a==='remgo'){t.closest('.remb').remove();const x=S.acts.find(y=>y.id===t.dataset.id);if(x&&S.screen==='app')openForm(JSON.parse(JSON.stringify(x)));return}
+if(a==='gorank'){S.tab='rank';save();render();return}
+if(a==='perm'){try{Notification.requestPermission().then(r=>toast(r==='granted'?'Notifications allowed':'Notifications not allowed'))}catch(e){toast('Notifications are not available here')}return}
+if(a==='testrem'){notify({id:'',title:'Test'},'This is a test reminder. Time to get to work.');return}
+if(a==='owner'){ev.preventDefault();oe=!oe;render();return}
+if(a==='saveowner'){S.owner=document.getElementById('oe').value.trim();save();oe=false;render();toast('Owner email saved');return}
+if(a==='at'){at=t.dataset.t;errs={};render();return}
+if(a==='applycp'){const code=document.getElementById('cpn').value.trim().toUpperCase(),r=cpCheck(code,null);if(typeof r==='string'){cpmsg=r;S.cp=null}else{S.cp=code;cpmsg='Coupon '+code+' applied: '+(r.type==='pct'?r.value+'%':'₹'+r.value)+' off '+(r.plan==='both'?'monthly and yearly':'the '+r.plan)+' plan.'}save();render();return}
+if(a==='mkcpn'){const v=i=>document.getElementById(i).value.trim(),code=v('c-code').toUpperCase().replace(/\s/g,''),val=+v('c-val');errs={};if(!/^[A-Z0-9_-]{3,20}$/.test(code))errs.cpn='Code must be 3 to 20 letters or numbers.';else if(S.coupons.some(c=>c.code===code))errs.cpn='That code already exists.';else if(!(val>0)||(v('c-type')==='pct'&&val>100))errs.cpn='Enter a valid discount value.';if(!errs.cpn){S.coupons.push({code,note:v('c-note'),type:v('c-type'),value:val,plan:v('c-plan'),max:+v('c-max')||0,exp:v('c-exp'),used:0,on:true});save();toast('Coupon created')}render();return}
+if(a==='tgl'){const c=S.coupons.find(x=>x.code===t.dataset.id);c.on=!c.on;save();render();return}
+if(a==='delcpn'){S.coupons=S.coupons.filter(x=>x.code!==t.dataset.id);save();render();return}
+if(a==='saverz'){const k=document.getElementById('rzk').value.trim();errs={};if(k&&!/^rzp_(test|live)_/.test(k))errs.rz='Key ID should start with rzp_test_ or rzp_live_.';else{S.rz=k;save();toast('Key ID saved')}render();return}
+if(a==='out'){S.screen='welcome';save();render();return}
+if(a==='wipe'){if(confirm('Delete all local data?')){S=def();save();render()}return}});
+document.addEventListener('change',e=>{if(e.target.id==='theme'){S.theme=e.target.value;save();render()}
+if(e.target.id==='remtog'){S.rem=e.target.checked;save()}
+if(e.target.id==='lead'){S.lead=+e.target.value;save()}
+if(e.target.id==='lb'){S.lb=e.target.checked;save();render()}});
+render();tick();setInterval(tick,30000);setInterval(()=>{if(S.screen==='app'&&!modal&&S.tab!=='settings')render()},60000);
+</script></body></html>
